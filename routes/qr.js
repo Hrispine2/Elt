@@ -253,7 +253,7 @@ https://youtube.com/@eliteprotechs
 https://eliteprotech.zone.id`;
 
                         const EliteProTechMess = {
-                            image: { url: 'http://elitepro-url-clouds.onrender.com/20251015_021919.jpg' },
+                            image: { url: 'https://eliteprotech-url.zone.id/1766274193656dj57l7.jpg' },
                             caption: EliteProTech_TEXT,
                             contextInfo: {
                                 mentionedJid: [EliteProTech.user.id],
