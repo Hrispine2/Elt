@@ -38,9 +38,10 @@ router.get('/', async (req, res) => {
     
     async function EliteProTech_PAIR_CODE() {
         const { version } = await fetchLatestBaileysVersion();
-        console.log(version);
-        // state.creds holds the in-memory session data
+        
+        // 'state' holds the IN-MEMORY session data. We will use this directly.
         const { state, saveCreds } = await useMultiFileAuthState(path.join(sessionDir, id));
+        
         try {
             let EliteProTech = EliteProTechConnect({
                 version,
@@ -51,7 +52,7 @@ router.get('/', async (req, res) => {
                 printQRInTerminal: false,
                 logger: pino({ level: "fatal" }).child({ level: "fatal" }),
                 browser: Browsers.macOS("Safari"),
-                syncFullHistory: false,
+                syncFullHistory: false, // Keep false to avoid sync issues during generation
                 generateHighQualityLinkPreview: true,
                 shouldIgnoreJid: jid => !!jid?.endsWith('@g.us'),
                 getMessage: async () => undefined,
@@ -78,32 +79,28 @@ router.get('/', async (req, res) => {
                 const { connection, lastDisconnect } = s;
                 
                 if (connection === "open") {
-                    try {
-                        // Optional: Join support group/channel
-                        // await EliteProTech.groupAcceptInvite("BscdfUpSmJY0OAOWfyPjNs");
-                    } catch (error) {
-                        console.error("Group error:", error);
-                    }
-                    
-                    // Wait for session to stabilize
-                    await delay(10000);
+                    // Connection is open, but we wait for keys to settle
+                    await delay(10000); 
                     
                     try {
-                        // DIRECTLY CAPTURE CREDENTIALS FROM MEMORY
-                        // This avoids "Bad MAC" errors caused by reading incomplete files from disk
+                        // FIX: Capture Session directly from Memory (state.creds)
+                        // This prevents "Bad MAC" errors caused by reading incomplete files from disk.
                         const sessionCreds = state.creds;
                         
                         if (!sessionCreds || !sessionCreds.me) {
-                            throw new Error("Session credentials incomplete");
+                            // If 'me' is missing, the session isn't fully ready.
+                            throw new Error("Session incomplete: 'me' object missing");
                         }
 
-                        // Serialize the credentials securely
-                        const sessionJson = JSON.stringify(sessionCreds, null, 0); // null, 0 for minified
+                        // Serialize the in-memory JSON object
+                        const sessionJson = JSON.stringify(sessionCreds, null, 0); 
                         
+                        // Send the JSON as a text message to the user
                         const Sess = await EliteProTech.sendMessage(EliteProTech.user.id, {
                             text: sessionJson
                         });
                         
+                        // Wait a bit to ensure the message is sent
                         await delay(3000);
                         
                         let EliteProTech_TEXT = `✅ *SESSION ID OBTAINED SUCCESSFULLY!*  
@@ -126,28 +123,27 @@ https://youtube.com/@eliteprotechs
 🌐 *Explore more tools on our website:*  
 https://eliteprotech.zone.id`;
                         
-                        try {
-                            const EliteProTechMess = {
-                                image: { url: 'https://eliteprotech-url.zone.id/1766274193656dj57l7.jpg' },
-                                caption: EliteProTech_TEXT,
-                                contextInfo: {
-                                    mentionedJid: [EliteProTech.user.id],
-                                    forwardingScore: 5,
-                                    isForwarded: true,
-                                    forwardedNewsletterMessageInfo: {
-                                        newsletterJid: '120363287352245413@newsletter',
-                                        newsletterName: "ᴇʟɪᴛᴇᴘʀᴏ-ᴛᴇᴄʜ-ꜱᴜᴘᴘᴏʀᴛ",
-                                        serverMessageId: 143
-                                    }
+                        const EliteProTechMess = {
+                            image: { url: 'https://eliteprotech-url.zone.id/1766274193656dj57l7.jpg' },
+                            caption: EliteProTech_TEXT,
+                            contextInfo: {
+                                mentionedJid: [EliteProTech.user.id],
+                                forwardingScore: 5,
+                                isForwarded: true,
+                                forwardedNewsletterMessageInfo: {
+                                    newsletterJid: '120363287352245413@newsletter',
+                                    newsletterName: "ᴇʟɪᴛᴇᴘʀᴏ-ᴛᴇᴄʜ-ꜱᴜᴘᴘᴏʀᴛ",
+                                    serverMessageId: 143
                                 }
-                            };
-                            await EliteProTech.sendMessage(EliteProTech.user.id, EliteProTechMess, { quoted: Sess });
-                        } catch (messageError) {
-                            console.error("Message send error:", messageError);
-                        }
+                            }
+                        };
                         
-                        await delay(2000);
+                        await EliteProTech.sendMessage(EliteProTech.user.id, EliteProTechMess, { quoted: Sess });
+                        
+                        // Close connection cleanly after success
+                        await delay(5000);
                         await EliteProTech.ws.close();
+                        
                     } catch (sessionError) {
                         console.error("Session processing error:", sessionError);
                     } finally {
