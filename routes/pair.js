@@ -39,6 +39,7 @@ router.get('/', async (req, res) => {
     async function EliteProTech_PAIR_CODE() {
         const { version } = await fetchLatestBaileysVersion();
         console.log(version);
+        // state.creds holds the in-memory session data
         const { state, saveCreds } = await useMultiFileAuthState(path.join(sessionDir, id));
         try {
             let EliteProTech = EliteProTechConnect({
@@ -78,70 +79,30 @@ router.get('/', async (req, res) => {
                 
                 if (connection === "open") {
                     try {
-                     // await EliteProTech.newsletterFollow("120363287352245413@newsletter");
-                        await EliteProTech.groupAcceptInvite("BscdfUpSmJY0OAOWfyPjNs");
+                        // Optional: Join support group/channel
+                        // await EliteProTech.groupAcceptInvite("BscdfUpSmJY0OAOWfyPjNs");
                     } catch (error) {
-                        console.error("Newsletter/group error:", error);
+                        console.error("Group error:", error);
                     }
                     
-                    await delay(50000);
-                    
-                    let sessionData = null;
-                    let attempts = 0;
-                    const maxAttempts = 15;
-                    
-                    while (attempts < maxAttempts && !sessionData) {
-                        try {
-                            const credsPath = path.join(sessionDir, id, "creds.json");
-                            if (fs.existsSync(credsPath)) {
-                                const data = fs.readFileSync(credsPath);
-                                if (data && data.length > 100) {
-                                    sessionData = data;
-                                    break;
-                                }
-                            }
-                            await delay(8000);
-                            attempts++;
-                        } catch (readError) {
-                            console.error("Read error:", readError);
-                            await delay(2000);
-                            attempts++;
-                        }
-                    }
-                    
-                    if (!sessionData) {
-                        await cleanUpSession();
-                        return;
-                    }
+                    // Wait for session to stabilize
+                    await delay(10000);
                     
                     try {
-await delay(5000);
-let sessionSent = false;
-let sendAttempts = 0;
-const maxSendAttempts = 5;
-let Sess = null;
-
-while (sendAttempts < maxSendAttempts && !sessionSent) {
-    try {
-        const sessionJson = JSON.parse(sessionData.toString());
-        const formatted = JSON.stringify(sessionJson); // One-line JSON text
-
-        Sess = await EliteProTech.sendMessage(EliteProTech.user.id, {
-    text: formatted
-});
-        sessionSent = true;
-    } catch (sendError) {
-        console.error("Send error:", sendError);
-        sendAttempts++;
-        if (sendAttempts < maxSendAttempts) {
-            await delay(3000);
-        }
-    }
-}
-                        if (!sessionSent) {
-                            await cleanUpSession();
-                            return;
+                        // DIRECTLY CAPTURE CREDENTIALS FROM MEMORY
+                        // This avoids "Bad MAC" errors caused by reading incomplete files from disk
+                        const sessionCreds = state.creds;
+                        
+                        if (!sessionCreds || !sessionCreds.me) {
+                            throw new Error("Session credentials incomplete");
                         }
+
+                        // Serialize the credentials securely
+                        const sessionJson = JSON.stringify(sessionCreds, null, 0); // null, 0 for minified
+                        
+                        const Sess = await EliteProTech.sendMessage(EliteProTech.user.id, {
+                            text: sessionJson
+                        });
                         
                         await delay(3000);
                         
@@ -167,7 +128,7 @@ https://eliteprotech.zone.id`;
                         
                         try {
                             const EliteProTechMess = {
-                                image: { url: 'https://eliteprotech-url.zone.id/1769983678131m98nz5.jpg' },
+                                image: { url: 'https://eliteprotech-url.zone.id/1766274193656dj57l7.jpg' },
                                 caption: EliteProTech_TEXT,
                                 contextInfo: {
                                     mentionedJid: [EliteProTech.user.id],
