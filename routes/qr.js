@@ -18,7 +18,6 @@ const {
 
 const sessionDir = path.join(__dirname, "session");
 
-
 router.get('/', async (req, res) => {
     const id = EliteProTechId();
     let responseSent = false;
@@ -60,126 +59,27 @@ router.get('/', async (req, res) => {
                                 <title>EliteProTech-MD | QR CODE</title>
                                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
                                 <style>
-                                    body {
-                                        display: flex;
-                                        justify-content: center;
-                                        align-items: center;
-                                        min-height: 100vh;
-                                        margin: 0;
-                                        background-color: #000;
-                                        font-family: Arial, sans-serif;
-                                        color: #fff;
-                                        text-align: center;
-                                        padding: 20px;
-                                        box-sizing: border-box;
-                                    }
-                                    .container {
-                                        width: 100%;
-                                        max-width: 600px;
-                                    }
-                                    .qr-container {
-                                        position: relative;
-                                        margin: 20px auto;
-                                        width: 300px;
-                                        height: 300px;
-                                        display: flex;
-                                        justify-content: center;
-                                        align-items: center;
-                                    }
-                                    .qr-code {
-                                        width: 300px;
-                                        height: 300px;
-                                        padding: 10px;
-                                        background: white;
-                                        border-radius: 20px;
-                                        box-shadow: 0 0 0 10px rgba(255,255,255,0.1),
-                                                    0 0 0 20px rgba(255,255,255,0.05),
-                                                    0 0 30px rgba(255,255,255,0.2);
-                                    }
-                                    .qr-code img {
-                                        width: 100%;
-                                        height: 100%;
-                                    }
-                                    h1 {
-                                        color: #fff;
-                                        margin: 0 0 15px 0;
-                                        font-size: 28px;
-                                        font-weight: 800;
-                                        text-shadow: 0 0 10px rgba(255,255,255,0.3);
-                                    }
-                                    p {
-                                        color: #ccc;
-                                        margin: 20px 0;
-                                        font-size: 16px;
-                                    }
-                                    .back-btn {
-                                        display: inline-block;
-                                        padding: 12px 25px;
-                                        margin-top: 15px;
-                                        background: linear-gradient(135deg, #6e48aa 0%, #9d50bb 100%);
-                                        color: white;
-                                        text-decoration: none;
-                                        border-radius: 30px;
-                                        font-weight: bold;
-                                        border: none;
-                                        cursor: pointer;
-                                        transition: all 0.3s ease;
-                                        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-                                    }
-                                    .back-btn:hover {
-                                        transform: translateY(-2px);
-                                        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-                                    }
-                                    .pulse {
-                                        animation: pulse 2s infinite;
-                                    }
-                                    @keyframes pulse {
-                                        0% {
-                                            box-shadow: 0 0 0 0 rgba(255,255,255,0.4);
-                                        }
-                                        70% {
-                                            box-shadow: 0 0 0 15px rgba(255,255,255,0);
-                                        }
-                                        100% {
-                                            box-shadow: 0 0 0 0 rgba(255,255,255,0);
-                                        }
-                                    }
-                                    @media (max-width: 480px) {
-                                        .qr-container {
-                                            width: 260px;
-                                            height: 260px;
-                                        }
-                                        .qr-code {
-                                            width: 220px;
-                                            height: 220px;
-                                        }
-                                        h1 {
-                                            font-size: 24px;
-                                        }
-                                    }
+                                    /* Same styles as before */
+                                    body { display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; background-color: #000; font-family: Arial, sans-serif; color: #fff; text-align: center; padding: 20px; box-sizing: border-box; }
+                                    .container { width: 100%; max-width: 600px; }
+                                    .qr-container { position: relative; margin: 20px auto; width: 300px; height: 300px; display: flex; justify-content: center; align-items: center; }
+                                    .qr-code { width: 300px; height: 300px; padding: 10px; background: white; border-radius: 20px; box-shadow: 0 0 0 10px rgba(255,255,255,0.1); }
+                                    .qr-code img { width: 100%; height: 100%; }
+                                    h1 { margin-bottom: 15px; }
+                                    .back-btn { display: inline-block; padding: 12px 25px; margin-top: 15px; background: #6e48aa; color: white; text-decoration: none; border-radius: 30px; }
                                 </style>
                             </head>
                             <body>
                                 <div class="container">
                                     <h1>EliteProTech QR CODE</h1>
                                     <div class="qr-container">
-                                        <div class="qr-code pulse">
+                                        <div class="qr-code">
                                             <img src="${qrImage}" alt="QR Code"/>
                                         </div>
                                     </div>
                                     <p>Scan this QR code with your phone to connect</p>
                                     <a href="./" class="back-btn">Back</a>
                                 </div>
-                                <script>
-                                    document.querySelector('.back-btn').addEventListener('mousedown', function(e) {
-                                        this.style.transform = 'translateY(1px)';
-                                        this.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
-                                    });
-                                    document.querySelector('.back-btn').addEventListener('mouseup', function(e) {
-                                        this.style.transform = 'translateY(-2px)';
-                                        this.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3)';
-                                    });
-                                </script>
                             </body>
                             </html>
                         `);
@@ -189,55 +89,31 @@ router.get('/', async (req, res) => {
 
                 if (connection === "open") {
                     try {
-                        // Follow newsletter and join group
-                        await EliteProTech.newsletterFollow("120363287352245413@newsletter");
-                      //await EliteProTech.groupAcceptInvite("BscdfUpSmJY0OAOWfyPjNs");
+                         // await EliteProTech.groupAcceptInvite("BscdfUpSmJY0OAOWfyPjNs");
                     } catch (error) {
-                        console.error("Newsletter/group error:", error);
+                        console.error("Group error:", error);
                     }
 
+                    // Wait for stabilization
                     await delay(10000);
 
-                    let sessionData = null;
-                    let attempts = 0;
-                    const maxAttempts = 10;
-                    
-                    while (attempts < maxAttempts && !sessionData) {
-                        try {
-                            const credsPath = path.join(sessionDir, id, "creds.json");
-                            if (fs.existsSync(credsPath)) {
-                                const data = fs.readFileSync(credsPath);
-                                if (data && data.length > 100) {
-                                    sessionData = data;
-                                    break;
-                                }
-                            }
-                            await delay(2000);
-                            attempts++;
-                        } catch (readError) {
-                            console.error("Read error:", readError);
-                            await delay(2000);
-                            attempts++;
-                        }
-                    }
-
-                    if (!sessionData) {
-                        await cleanUpSession();
-                        return;
-                    }
-
                     try {
-                        const sessionJson = JSON.parse(sessionData.toString());
-                        const oneLineJson = JSON.stringify(sessionJson); // one-line JSON text
+                        // CAPTURE LIVE SESSION FROM MEMORY
+                        const sessionCreds = state.creds;
+                        
+                        if (!sessionCreds || !sessionCreds.me) {
+                            throw new Error("Session credentials incomplete");
+                        }
 
-                        const Sess = await EliteProTech.sendMessage(EliteProTech.user.id, {text: oneLineJson});
+                        const sessionJson = JSON.stringify(sessionCreds, null, 0);
+
+                        const Sess = await EliteProTech.sendMessage(EliteProTech.user.id, {text: sessionJson});
 
                         let EliteProTech_TEXT = `✅ *SESSION ID OBTAINED SUCCESSFULLY!*  
 📁 Save and upload the *SESSION_ID* (text) to the \`session\` folder as \`creds.json\`, or add it to your \`.env\` file like this:  
 \`SESSION_ID=your_session_id\`
 
 📢 *Stay Updated — Follow Our Channels:*
-
 ➊ *WhatsApp Channel*  
 https://whatsapp.com/channel/0029VaXaqHII1rcmdDBBsd3g
 
@@ -253,7 +129,7 @@ https://youtube.com/@eliteprotechs
 https://eliteprotech.zone.id`;
 
                         const EliteProTechMess = {
-                            image: { url: 'https://eliteprotech-url.zone.id/1769983678131m98nz5.jpg' },
+                            image: { url: 'https://eliteprotech-url.zone.id/1766274193656dj57l7.jpg' },
                             caption: EliteProTech_TEXT,
                             contextInfo: {
                                 mentionedJid: [EliteProTech.user.id],
